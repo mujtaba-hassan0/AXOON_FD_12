@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Posts From API</title>
+  <link rel="stylesheet" href="output.css" />
+</head>
+<body class="bg-gray-50">
+
+  <button id="fetchbtn"
+    class="p-2 border rounded-2xl hover:cursor-pointer bg-blue-500 text-white" >
+    Generate Posts
+  </button>
+
+  <div id="contentdiv"
+    class="w-full h-full grid px-6 py-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" > </div>
+
+  <script>
+    const URL = 'https://jsonplaceholder.typicode.com/post';
+    let btn = document.getElementById('fetchbtn');
+    let maindiv = document.getElementById('contentdiv');
+
+    btn.addEventListener('click',() => {
+      
+     fetch(URL)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((postData) => {
+          // Get first 10 posts
+          for (let i = 0; i < 10; i++) {
+            let carddiv = document.createElement('div');
+
+            carddiv.className =
+              'relative w-[250px] h-full p-2 flex flex-col gap-5 border rounded-lg justify-start items-end';
+
+            let namee = document.createElement('h1');
+            namee.className = 'w-full text-2xl text-black text-right';
+            namee.textContent = 'Id: ' + postData[i].id;
+
+            let userTitle = document.createElement('h4');
+            userTitle.className = 'text-gray-600 text-right';
+            userTitle.textContent = 'Title: ' + postData[i].title;
+
+            let userBody = document.createElement('p');
+            userBody.className = 'w-[90%] text-right';
+            userBody.textContent = 'Body: ' + postData[i].body;
+
+
+            carddiv.appendChild(namee);
+            carddiv.appendChild(userTitle);
+            carddiv.appendChild(userBody);
+
+            maindiv.appendChild(carddiv);
+          }
+          console.log("Api Successfully called");
+          btn.style.display = 'none';
+        })
+        .catch((error) => {
+          let sorryMsg = document.createElement('p');
+          sorryMsg.textContent =
+            'Sorry, something went wrong while fetching posts.';
+          sorryMsg.className =
+            'text-red-600 text-xl font-bold col-span-full text-center';
+          maindiv.appendChild(sorryMsg);
+
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
